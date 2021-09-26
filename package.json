@@ -1,0 +1,20 @@
+{
+  "name": "kawaii",
+  "version": "1.0.0",
+  "description": "",
+  "main": "generateCSV.js",
+  "scripts": {
+    "start": "node generateCSV.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kome12/kawaii.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kome12/kawaii/issues"
+  },
+  "homepage": "https://github.com/kome12/kawaii#readme"
+}
