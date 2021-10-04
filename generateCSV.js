@@ -23,6 +23,24 @@ const CATEGORIES = [
   "ボーイッシュ",
   "レトロ",
 ];
+const KAWAII_PHOTOS = [
+  4, 5, 6, 7, 8, 12, 14, 17, 21, 24, 26, 29, 30, 31, 32, 33, 41, 42, 43, 44, 50,
+  51, 52, 54, 56, 67, 73, 74, 75, 76, 79, 80, 83, 84, 86, 89, 92, 93, 94, 96,
+  99, 102, 105, 109, 111, 114, 120, 123, 129, 133, 134, 140, 147, 159, 161, 164,
+  170, 172, 176, 177,
+];
+const CLASSICAL_PHOTOS = [
+  2, 3, 10, 15, 18, 20, 23, 25, 34, 37, 46, 47, 48, 53, 57, 58, 59, 61, 62, 63,
+  64, 66, 71, 77, 85, 87, 90, 91, 100, 112, 115, 116, 117, 118, 119, 121, 127,
+  130, 131, 132, 139, 141, 142, 143, 144, 145, 146, 149, 151, 152, 153, 155,
+  158, 166, 167, 168, 173, 175, 178, 179,
+];
+const STREET_PHOTOS = [
+  1, 9, 11, 13, 16, 19, 22, 27, 28, 35, 36, 38, 39, 40, 45, 49, 55, 60, 65, 68,
+  69, 70, 72, 78, 81, 82, 88, 95, 97, 98, 101, 103, 104, 106, 107, 108, 110,
+  113, 122, 124, 125, 126, 128, 135, 136, 137, 138, 148, 150, 154, 156, 157,
+  160, 162, 163, 165, 169, 171, 174, 180,
+];
 const MAX_SCORE = 5;
 
 const readData = (filePath = ORIGINAL_DATA) => {
@@ -51,6 +69,20 @@ const writeToCSV = (filePath, data) => {
   });
 };
 
+const populateHashmap = (hashmap, array, categoryName) => {
+  for (const photoNum of array) {
+    hashmap[photoNum] = categoryName;
+  }
+};
+
+const createHashmap = () => {
+  const categoryHashmap = {};
+  populateHashmap(categoryHashmap, KAWAII_PHOTOS, "kawaii");
+  populateHashmap(categoryHashmap, CLASSICAL_PHOTOS, "classical");
+  populateHashmap(categoryHashmap, STREET_PHOTOS, "street");
+  return categoryHashmap;
+};
+
 const createEmptyDataset = () => {
   return CATEGORIES.reduce((hashmap, category) => {
     hashmap[category] = 0;
@@ -65,6 +97,7 @@ const getAndFormatData = async () => {
     pointsPerCategoryPerPhoto.push(createEmptyDataset());
   }
 
+  const categoryHashmap = createHashmap();
   const splitData = data.split("\n");
   // console.log("splitData:", splitData);
   for (let index = 1; index < splitData.length; index++) {
@@ -92,11 +125,22 @@ const getAndFormatData = async () => {
 
     const header = ["Photo", "Category", "Score"];
     const aggregatedData = [];
-    // for (let index = 0; index < pointsPerCategoryPerPhoto.length; index++) {
-    for (let index = 0; index < 5; index++) {
+    const splitByCategoryData = {
+      kawaii: [],
+      classical: [],
+      street: [],
+    };
+
+    for (let index = 0; index < pointsPerCategoryPerPhoto.length; index++) {
+      // for (let index = 0; index < 5; index++) {
       const photo = pointsPerCategoryPerPhoto[index];
       for (const category in photo) {
         aggregatedData.push(`${index + 1},${category},${photo[category]}`);
+
+        const categoryName = categoryHashmap[index + 1];
+        splitByCategoryData[categoryName].push(
+          `${index + 1},${category},${photo[category]}`
+        );
       }
     }
 
@@ -105,6 +149,15 @@ const getAndFormatData = async () => {
       SAVE_CSV + "bar_chart_data.csv",
       aggregatedData.join("\n")
     );
+
+    for (const categoryData in splitByCategoryData) {
+      const data = splitByCategoryData[categoryData];
+      data.unshift(header.join(","));
+      await writeToCSV(
+        SAVE_CSV + `${categoryData}_bar_chart_data.csv`,
+        data.join("\n")
+      );
+    }
   }
 };
 
