@@ -6,6 +6,8 @@ const SAVE_CSV = "./data/";
 const NUM_STUDENTS = 20;
 const NUM_PHOTOS = 180;
 const NUM_CATEGORIES = 15;
+// students choosing top 5 photos, 60 photos per category, 20 students
+const TOTAL_POSSIBLE_POINTS = 18000;
 const CATEGORIES = [
   "カジュアル",
   "かわいい",
@@ -99,12 +101,9 @@ const getAndFormatData = async () => {
 
   const categoryHashmap = createHashmap();
   const splitData = data.split("\n");
-  // console.log("splitData:", splitData);
   for (let index = 1; index < splitData.length; index++) {
     const line = splitData[index];
-    // console.log("line:", line);
     const splitLine = line.split(",");
-    // console.log("splitLine:", splitLine);
     let i = 0;
     while (i < NUM_PHOTOS) {
       let categoryIndex = 0;
@@ -123,7 +122,9 @@ const getAndFormatData = async () => {
       i += 1;
     }
 
+    const header_aggregate = ["Photo", "Category", "Score", "Cluster"];
     const header = ["Photo", "Category", "Score"];
+    const header_pie = ["Category", "Percentage"];
     const aggregatedData = [];
     const splitByCategoryData = {
       kawaii: [],
@@ -131,20 +132,39 @@ const getAndFormatData = async () => {
       street: [],
     };
 
+    const splitByCategoryDataPie = {
+      kawaii: {},
+      classical: {},
+      street: {},
+    };
+
     for (let index = 0; index < pointsPerCategoryPerPhoto.length; index++) {
       // for (let index = 0; index < 5; index++) {
       const photo = pointsPerCategoryPerPhoto[index];
-      for (const category in photo) {
-        aggregatedData.push(`${index + 1},${category},${photo[category]}`);
+      let sum = 0;
 
+      for (const category in photo) {
         const categoryName = categoryHashmap[index + 1];
+
+        aggregatedData.push(
+          `${index + 1},${category},${photo[category]},${categoryName}`
+        );
+
         splitByCategoryData[categoryName].push(
           `${index + 1},${category},${photo[category]}`
         );
+
+        if (splitByCategoryDataPie[categoryName][category] === undefined) {
+          splitByCategoryDataPie[categoryName][category] = photo[category];
+        } else {
+          splitByCategoryDataPie[categoryName][category] += photo[category];
+        }
       }
     }
 
-    aggregatedData.unshift(header.join(","));
+    console.log("splitByCategoryDataPie:", splitByCategoryDataPie);
+
+    aggregatedData.unshift(header_aggregate.join(","));
     await writeToCSV(
       SAVE_CSV + "bar_chart_data.csv",
       aggregatedData.join("\n")
@@ -155,6 +175,33 @@ const getAndFormatData = async () => {
       data.unshift(header.join(","));
       await writeToCSV(
         SAVE_CSV + `${categoryData}_bar_chart_data.csv`,
+        data.join("\n")
+      );
+    }
+
+    for (const categoryData in splitByCategoryDataPie) {
+      const categories = splitByCategoryDataPie[categoryData];
+      // console.log("categories:", categories);
+      // for (const category in categories) {
+      //   total += categories[category];
+      // }
+
+      // console.log("total:", total);
+
+      const data = [];
+      for (const category in categories) {
+        data.push(
+          `${category},${
+            Math.round((categories[category] / TOTAL_POSSIBLE_POINTS) * 1000) /
+            10
+          }`
+        );
+      }
+
+      console.log("data:", data);
+      data.unshift(header_pie.join(","));
+      await writeToCSV(
+        SAVE_CSV + `${categoryData}_pie_chart_data.csv`,
         data.join("\n")
       );
     }
