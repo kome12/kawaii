@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "start-bar": "node generateCSV.js",
+    "start-bar-count": "node generateBarPlotCountCSV.js",
     "start-box": "node generateBoxPlot-ViolinPlotCSV.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

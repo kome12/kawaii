@@ -1,6 +1,7 @@
 import {
   CATEGORIES,
   createHashmap,
+  forceLineBreak,
   MAX_SCORE,
   NUM_CATEGORIES,
   NUM_PHOTOS,
@@ -47,8 +48,9 @@ const getAndFormatData = async () => {
       i += 1;
     }
 
+    const headerAggregatedBarChart = ["Category", "Score", "Cluster"];
     const header_aggregate = ["Photo", "Category", "Score", "Cluster"];
-    const header = ["Photo", "Category", "Score"];
+    const header = ["Photo", "Category", "Score", "Cluster"];
     const header_pie = ["Category", "Percentage"];
     const aggregatedData = [];
     const splitByCategoryData = {
@@ -63,9 +65,14 @@ const getAndFormatData = async () => {
       street: {},
     };
 
+    const splitByCategoryDataAggregate = {
+      kawaii: createEmptyDataset(),
+      classical: createEmptyDataset(),
+      street: createEmptyDataset(),
+    };
+
     for (let index = 0; index < pointsPerCategoryPerPhoto.length; index++) {
       const photo = pointsPerCategoryPerPhoto[index];
-      let sum = 0;
 
       for (const category in photo) {
         const categoryName = categoryHashmap[index + 1];
@@ -75,14 +82,31 @@ const getAndFormatData = async () => {
         );
 
         splitByCategoryData[categoryName].push(
-          `${index + 1},${category},${photo[category]}`
+          `${index + 1},${category},${photo[category]},${categoryName}`
         );
+
+        const cluster = splitByCategoryDataAggregate[categoryName];
+        cluster[category] += photo[category];
 
         if (splitByCategoryDataPie[categoryName][category] === undefined) {
           splitByCategoryDataPie[categoryName][category] = photo[category];
         } else {
           splitByCategoryDataPie[categoryName][category] += photo[category];
         }
+      }
+    }
+
+    console.log("splitByCategoryDataAggregate:", splitByCategoryDataAggregate);
+
+    const addAllClusterData = [];
+    for (const clusterName in splitByCategoryDataAggregate) {
+      const clusterData = splitByCategoryDataAggregate[clusterName];
+      for (const category in clusterData) {
+        addAllClusterData.push(
+          `"${forceLineBreak(category)}",${
+            clusterData[category]
+          },${clusterName}`
+        );
       }
     }
 
@@ -100,6 +124,12 @@ const getAndFormatData = async () => {
         data.join("\n")
       );
     }
+
+    addAllClusterData.unshift(headerAggregatedBarChart.join(","));
+    await writeToCSV(
+      SAVE_CSV + `aggregated_bar_chart_data.csv`,
+      addAllClusterData.join("\n")
+    );
 
     for (const categoryData in splitByCategoryDataPie) {
       const categories = splitByCategoryDataPie[categoryData];

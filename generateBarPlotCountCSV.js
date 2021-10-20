@@ -1,6 +1,7 @@
 import {
   CATEGORIES,
   createHashmap,
+  forceLineBreak,
   MAX_SCORE,
   NUM_CATEGORIES,
   NUM_PHOTOS,
@@ -9,7 +10,7 @@ import {
   writeToCSV,
 } from "./helpers.js";
 
-const getAndFormatDataForBoxAndViolin = async () => {
+const getAndFormatData = async () => {
   const data = await readData();
   const splitData = data.split("\n");
   const clusterHashmap = createHashmap();
@@ -18,6 +19,7 @@ const getAndFormatDataForBoxAndViolin = async () => {
     street: [],
     classical: [],
   };
+
   for (let index = 1; index < splitData.length; index++) {
     const line = splitData[index];
     const splitLine = line.split(",");
@@ -34,7 +36,7 @@ const getAndFormatDataForBoxAndViolin = async () => {
         if (score !== "") {
           const category = CATEGORIES[categoryIndex];
           splitByCluster[clusterName].push(
-            `${i + 1},${category},${MAX_SCORE - +score + 1}`
+            `${i + 1},"${forceLineBreak(category)}",${MAX_SCORE - +score + 1},1`
           );
         }
         categoryIndex += 1;
@@ -43,16 +45,16 @@ const getAndFormatDataForBoxAndViolin = async () => {
     }
   }
 
-  const header = ["Photo", "Category", "Score"];
+  const header = ["Photo", "Category", "Score", "Count"];
 
   for (const cluster in splitByCluster) {
     const data = splitByCluster[cluster];
     data.unshift(header.join(","));
     await writeToCSV(
-      SAVE_CSV + `${cluster}_box_plot_data.csv`,
+      SAVE_CSV + `${cluster}_bar_chart_count_data.csv`,
       data.join("\n")
     );
   }
 };
 
-getAndFormatDataForBoxAndViolin();
+getAndFormatData();

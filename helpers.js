@@ -84,3 +84,11 @@ export const createHashmap = () => {
   populateHashmap(categoryHashmap, STREET_PHOTOS, "street");
   return categoryHashmap;
 };
+
+export const forceLineBreak = (categoryName) => {
+  // console.log("categoryName:", categoryName);
+  if (categoryName.includes("（")) {
+    return categoryName.replace("（", "\n（");
+  }
+  return categoryName;
+};
