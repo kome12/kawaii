@@ -38,6 +38,11 @@ const getAndFormatData = async () => {
           splitByCluster[clusterName].push(
             `${i + 1},"${forceLineBreak(category)}",${MAX_SCORE - +score + 1},1`
           );
+        } else {
+          const category = CATEGORIES[categoryIndex];
+          splitByCluster[clusterName].push(
+            `${i + 1},"${forceLineBreak(category)}",0,1`
+          );
         }
         categoryIndex += 1;
       }

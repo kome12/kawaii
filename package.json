@@ -6,6 +6,7 @@
     "start-bar": "node generateCSV.js",
     "start-bar-count": "node generateBarPlotCountCSV.js",
     "start-box": "node generateBoxPlot-ViolinPlotCSV.js",
+    "start-kawaii": "node generatePhotosWithKawaii.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

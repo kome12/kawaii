@@ -45,6 +45,8 @@ export const STREET_PHOTOS = [
 ];
 export const MAX_SCORE = 5;
 
+export const KAWAII_INDEX = 1;
+
 export const readData = (filePath = ORIGINAL_DATA) => {
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, "utf8", (err, data) => {
@@ -86,7 +88,6 @@ export const createHashmap = () => {
 };
 
 export const forceLineBreak = (categoryName) => {
-  // console.log("categoryName:", categoryName);
   if (categoryName.includes("（")) {
     return categoryName.replace("（", "\n（");
   }

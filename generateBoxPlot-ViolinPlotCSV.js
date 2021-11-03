@@ -36,6 +36,9 @@ const getAndFormatDataForBoxAndViolin = async () => {
           splitByCluster[clusterName].push(
             `${i + 1},${category},${MAX_SCORE - +score + 1}`
           );
+        } else {
+          const category = CATEGORIES[categoryIndex];
+          splitByCluster[clusterName].push(`${i + 1},${category},${0}`);
         }
         categoryIndex += 1;
       }
