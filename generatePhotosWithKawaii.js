@@ -62,6 +62,7 @@ const getAndFormatData = async () => {
     }
   }
 
+  const overallHeader = ["Photo"].concat(CATEGORIES);
   const header = [
     "Photo",
     "# of 5 points (Kawaii)",
@@ -74,8 +75,10 @@ const getAndFormatData = async () => {
   for (let clusterName in splitByCluster) {
     const cluster = splitByCluster[clusterName];
     const result = [];
+    const overall = [];
     for (let photo in cluster) {
       const data = cluster[photo];
+      overall.push(`${photo},${data.scores.join(",")}`);
       if (checkIfKawaiiIsMax(data)) {
         result.push(
           `${photo},${data[MAX_SCORE]},${data[MAX_SCORE - 1]},${
@@ -86,6 +89,12 @@ const getAndFormatData = async () => {
         );
       }
     }
+
+    overall.unshift(overallHeader.join(","));
+    await writeToCSV(
+      SAVE_CSV + `${clusterName}_all_photos.csv`,
+      overall.join("\n")
+    );
 
     result.unshift(header.join(","));
     await writeToCSV(
