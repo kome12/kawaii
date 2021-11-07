@@ -54,20 +54,20 @@ const getAndFormatData = async () => {
     const header_pie = ["Category", "Percentage"];
     const aggregatedData = [];
     const splitByCategoryData = {
-      kawaii: [],
-      classical: [],
+      orthodox: [],
+      classic: [],
       street: [],
     };
 
     const splitByCategoryDataPie = {
-      kawaii: {},
-      classical: {},
+      orthodox: {},
+      classic: {},
       street: {},
     };
 
     const splitByCategoryDataAggregate = {
-      kawaii: createEmptyDataset(),
-      classical: createEmptyDataset(),
+      orthodox: createEmptyDataset(),
+      classic: createEmptyDataset(),
       street: createEmptyDataset(),
     };
 

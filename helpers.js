@@ -81,8 +81,8 @@ export const populateHashmap = (hashmap, array, categoryName) => {
 
 export const createHashmap = () => {
   const categoryHashmap = {};
-  populateHashmap(categoryHashmap, KAWAII_PHOTOS, "kawaii");
-  populateHashmap(categoryHashmap, CLASSICAL_PHOTOS, "classical");
+  populateHashmap(categoryHashmap, KAWAII_PHOTOS, "orthodox");
+  populateHashmap(categoryHashmap, CLASSICAL_PHOTOS, "classic");
   populateHashmap(categoryHashmap, STREET_PHOTOS, "street");
   return categoryHashmap;
 };

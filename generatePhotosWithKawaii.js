@@ -15,7 +15,7 @@ const getAndFormatData = async () => {
   const splitData = data.split("\n");
   const clusterHashmap = createHashmap();
   const splitByCluster = {
-    kawaii: {},
+    orthodox: {},
     street: {},
     classical: {},
   };

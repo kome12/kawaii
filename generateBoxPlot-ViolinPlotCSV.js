@@ -14,9 +14,9 @@ const getAndFormatDataForBoxAndViolin = async () => {
   const splitData = data.split("\n");
   const clusterHashmap = createHashmap();
   const splitByCluster = {
-    kawaii: [],
+    orthodox: [],
     street: [],
-    classical: [],
+    classic: [],
   };
   for (let index = 1; index < splitData.length; index++) {
     const line = splitData[index];

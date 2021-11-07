@@ -10,7 +10,8 @@ print(head(aggregatedData))
 
 barChartSplit <- ggplot(aggregatedData) +
   geom_col(aes(x = fct_inorder(Category), y = Score,fill=Cluster), position = position_dodge()) +
-    scale_fill_manual(values=c("#FF5733", "#75FF33", "#33DBFF", "#BD33FF", "#FF5733", "#FFBD33", "#DBFF33", "#67A613", "#33FF57", "#33FFBD", "#A62D13", "#A65213", "#A67713", "#A69B13", "#8CA613"))
+    scale_fill_manual(values=c("#FD78A0", "#ffb1c9", "#ea3ba2")) + labs(x=" ", y=" ", color=" ")
+    # scale_fill_manual(values=c("#FD78A0", "#ffb1c9", "#ea3ba2", "#BD33FF", "#FF5733", "#FFBD33", "#DBFF33", "#67A613", "#33FF57", "#33FFBD", "#A62D13", "#A65213", "#A67713", "#A69B13", "#8CA613"))
 print(barChartSplit)
 
 numPhotos <- 10;
