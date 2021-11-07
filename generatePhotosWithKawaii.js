@@ -17,7 +17,7 @@ const getAndFormatData = async () => {
   const splitByCluster = {
     orthodox: {},
     street: {},
-    classical: {},
+    classic: {},
   };
 
   for (let index = 1; index < splitData.length; index++) {
